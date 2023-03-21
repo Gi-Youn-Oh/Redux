@@ -1,9 +1,9 @@
 const { createStore, compose, applyMiddleware } = require('redux');
 const { composeWithDevTools } = require('redux-devtools-extension');
 
-const reducer = require('../reducers');
-const { addPost } = require('../actions/post');
-const { logIn, logOut } = require('../actions/user');
+const reducer = require('./reducers');
+const { addPost } = require('./actions/post');
+const { logIn, logOut } = require('./actions/user');
 
 const initialState = {
   user: {
@@ -25,14 +25,15 @@ const thunkMiddleware = (store) => (next) => (action) => {
   return next(action); // 동기
 };
 
-const enhancer = process.env.NODE_ENV === 'production' // 배포용일 때는 compose를 사용 데이터 노출 방지
+
+const enhancer = process.env.NODE_ENV === 'production'
   ? compose(
     applyMiddleware(
       firstMiddleware,
       thunkMiddleware,
     ),
   )
-  : composeWithDevTools( // 개발용일 때는 composeWithDevTools를 사용 
+  : composeWithDevTools(
     applyMiddleware(
       firstMiddleware,
       thunkMiddleware,
@@ -42,4 +43,3 @@ const enhancer = process.env.NODE_ENV === 'production' // 배포용일 때는 co
 const store = createStore(reducer, initialState, enhancer);
 
 module.exports = store;
-
